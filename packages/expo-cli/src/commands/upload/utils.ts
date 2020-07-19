@@ -73,7 +73,13 @@ export async function runFastlaneAsync(
 
   const { stderr } = await spawnAsyncThrowError(program, args, spawnOptions);
 
-  const res = JSON.parse(stderr);
+  let res;
+  try {
+    res = JSON.parse(stderr);
+  } catch {
+    throw new Error(stderr);
+  }
+  
   if (res.result !== 'failure') {
     return res;
   } else {
